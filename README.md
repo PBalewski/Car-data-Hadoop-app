@@ -29,17 +29,24 @@ This project is a web-based application for analyzing car data using Flask, Apac
 
 ```bash
 git clone https://github.com/PBalewski/Car-data-Hadoop-app
-cd car-data-app
+cd Car-data-Hadoop-app
 ```
 
-2. Build and run the Docker container:
+2. Start hdfs (Hadoop must be installed):
+
+```bash
+start-dfs.sh
+start-yarn.sh
+```
+
+3. Build and run the Docker container:
 
 ```bash
 docker build -t car-data-app .
 docker run -p 5000:5000 car-data-app
 ```
 
-3. Open your browser and go to:
+4. Open your browser and go to:
 
 ```
 http://localhost:5000
@@ -50,7 +57,7 @@ http://localhost:5000
 ## Project Structure
 
 ```
-car-data-app/
+Car-data-Hadoop-app/
 ├── car_app.py               # Main Flask application
 ├── CarsData.csv             # Dataset
 ├── CarsData_analysis.ipynb  # Jupyter Notebook for data exploration
