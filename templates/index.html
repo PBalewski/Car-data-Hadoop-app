@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Data Explorer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="section">
+    <h1>Car Data Explorer</h1>
+    <form method="get">
+        <label>Select a view:</label>
+        <select name="view" onchange="this.form.submit()">
+            <option value="">-- Select --</option>
+            <option value="brand_price" {{ 'selected' if view == 'brand_price' else '' }}>Brand vs. Price</option>
+            <option value="brand_mileage" {{ 'selected' if view == 'brand_mileage' else '' }}>Brand vs. Mileage</option>
+            <option value="brand_mpg" {{ 'selected' if view == 'brand_mpg' else '' }}>Brand vs. MPG</option>
+            <option value="fuel_price" {{ 'selected' if view == 'fuel_price' else '' }}>Fuel Type vs. Price</option>
+            <option value="transmission_price" {{ 'selected' if view == 'transmission_price' else '' }}>Transmission vs. Price</option>
+        </select>
+        <noscript><input type="submit" value="Submit"></noscript>
+    </form>
+</div>
+
+{% if data %}
+<div class="section">
+    <h2>{{ label }}</h2>
+    <table>
+        <tr><th>{{ xcol }}</th><th>{{ ycol }}</th></tr>
+        {% for row in data %}
+            <tr><td>{{ row[0] }}</td><td>{{ "%.2f"|format(row[1]) }}</td></tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+
+{% if x_values and y_min is not none and y_max is not none %}
+<div class="section">
+    <form method="get">
+        <input type="hidden" name="view" value="{{ view }}">
+        <label>Filter {{ xcol }}:</label><br>
+        {% for val in x_values %}
+            <input type="checkbox" name="x_filter" value="{{ val }}"
+                {% if val in selected_x %}checked{% endif %}>
+            {{ val }}<br>
+        {% endfor %}
+        <br>
+        <label>{{ ycol }} Range:</label><br>
+        Min: <input type="number" name="y_min" step="any" value="{{ y_min }}"><br>
+        Max: <input type="number" name="y_max" step="any" value="{{ y_max }}"><br><br>
+        <input type="submit" value="Apply Filters">
+    </form>
+</div>
+{% endif %}
+
+{% if best_car %}
+<div class="section highlight">
+    <h2>Recommended Car</h2>
+    <p>This might be your best option:</p>
+    <table>
+        <tr>
+            {% for key in best_car.keys() %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for val in best_car.values() %}
+                <td>{{ val }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+</div>
+{% endif %}
+
+{% if filtered_rows %}
+<div class="section">
+    <h2>Matching Records</h2>
+    <table>
+        <tr>
+            {% for col in filtered_rows[0].keys() %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in filtered_rows %}
+            <tr>
+                {% for val in row.values() %}
+                    <td>{{ val }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+
+{% if total_pages > 1 %}
+<div class="pagination section">
+
+    <!-- Previous Button -->
+    <form method="get" style="display:inline;">
+        <input type="hidden" name="view" value="{{ view }}">
+        <input type="hidden" name="per_page" value="{{ per_page }}">
+        <input type="hidden" name="y_min" value="{{ y_min }}">
+        <input type="hidden" name="y_max" value="{{ y_max }}">
+        {% for val in request.args.getlist('x_filter') %}
+            <input type="hidden" name="x_filter" value="{{ val }}">
+        {% endfor %}
+        <button type="submit" name="page" value="{{ page - 1 }}" {% if page <= 1 %}disabled{% endif %}>Prev</button>
+    </form>
+
+    <!-- Page Number Buttons -->
+    {% for p in range(1, total_pages + 1) %}
+        <form method="get" style="display:inline;">
+            <input type="hidden" name="view" value="{{ view }}">
+            <input type="hidden" name="per_page" value="{{ per_page }}">
+            <input type="hidden" name="y_min" value="{{ y_min }}">
+            <input type="hidden" name="y_max" value="{{ y_max }}">
+            {% for val in request.args.getlist('x_filter') %}
+                <input type="hidden" name="x_filter" value="{{ val }}">
+            {% endfor %}
+            <button type="submit" name="page" value="{{ p }}" {% if p == page %}disabled{% endif %}>
+                {{ p }}
+            </button>
+        </form>
+    {% endfor %}
+
+    <!-- Next Button -->
+    <form method="get" style="display:inline;">
+        <input type="hidden" name="view" value="{{ view }}">
+        <input type="hidden" name="per_page" value="{{ per_page }}">
+        <input type="hidden" name="y_min" value="{{ y_min }}">
+        <input type="hidden" name="y_max" value="{{ y_max }}">
+        {% for val in request.args.getlist('x_filter') %}
+            <input type="hidden" name="x_filter" value="{{ val }}">
+        {% endfor %}
+        <button type="submit" name="page" value="{{ page + 1 }}" {% if page >= total_pages %}disabled{% endif %}>Next</button>
+    </form>
+
+</div>
+{% endif %}
+
+</body>
+</html>
