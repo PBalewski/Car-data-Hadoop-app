@@ -28,7 +28,7 @@ This project is a web-based application for analyzing car data using Flask, Apac
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/car-data-app.git
+git clone https://github.com/PBalewski/Car-data-Hadoop-app
 cd car-data-app
 ```
 
