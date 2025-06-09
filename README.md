@@ -11,7 +11,7 @@ This project is a web-based application for analyzing car data using Flask, Apac
 - Paginated and sortable table view
 - Automatic recommendation of the most fuel-efficient car
 - Data processing with Apache Spark
-- Optional integration with HDFS for data storage
+- By default (however optional) integration with HDFS for data storage
 - Clean UI with HTML/CSS templates
 - Dockerized for easy deployment
 
@@ -70,7 +70,7 @@ If you'd rather run the app directly:
 
 ### Prerequisites
 
-- Python 3.6+
+- Python 3.6
 - Apache Spark
 - Flask
 - pandas, pyspark, matplotlib
@@ -95,13 +95,16 @@ Then go to `http://localhost:5000` in your browser.
 
 The included dataset (`CarsData.csv`) contains information such as:
 
-- Brand
-- Model
-- Price
-- MPG
-- Horsepower
-- Weight
-- Acceleration
+- Model: The model of the car.
+- Year: The manufacturing year of the car.
+- Price: The price of the car.
+- Transmission: The type of transmission used in the car.
+- Mileage: The mileage of the car.
+- FuelType: The type of fuel used by the car.
+- Tax: The tax rate applicable to the car.
+- MPG: The miles per gallon efficiency of the car.
+- EngineSize: The size of the car's engine.
+- Manufacturer: The manufacturer of the car.
 
 ---
 
